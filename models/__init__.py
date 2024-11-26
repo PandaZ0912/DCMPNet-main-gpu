@@ -1,2 +1,2 @@
-from .DIACMPN import DIACMPN_dehighlight_Indoor
+from .DIACMPN import DIACMPN_dehighlight
 from .UNet import UNet

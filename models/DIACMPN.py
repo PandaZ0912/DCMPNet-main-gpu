@@ -9,7 +9,7 @@ from models import DepthNet
 from models.UNet import UNet
 
 
-def DIACMPN_dehighlight_Indoor():
+def DIACMPN_dehighlight():
     return DIACMPN(
         embed_dims=[24, 48, 96, 48, 24],
         mlp_ratios=[2., 4., 4., 2., 2.],

@@ -18,14 +18,15 @@ import setproctitle
 setproctitle.setproctitle("dehighlight_Test")
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--model', default='', type=str, help='model name')
+parser.add_argument('--model', default='Highlight-Removal', type=str, help='model name')
+parser.add_argument('--model_detection', default='Highlight-Removal-detection', type=str, help='detection model name')
 parser.add_argument('--num_workers', default=16, type=int, help='number of workers')
 parser.add_argument('--data_dir', default='./data/', type=str, help='path to dataset')
 parser.add_argument('--save_dir', default='./saved_models/', type=str, help='path to models saving')
 parser.add_argument('--dehighlight_result_dir', default='./results/dehighlight_result/', type=str, help='path to results saving')
-parser.add_argument('--dataset', default='RESIDE-IN', type=str, help='dataset name')
+parser.add_argument('--dataset', default='RD', type=str, help='dataset name')
 parser.add_argument('--exp', default='Highlight-Removal', type=str, help='experiment setting')
-parser.add_argument('--gpu', default='1', type=str, help='GPUs used for training')
+parser.add_argument('--gpu', default='0', type=str, help='GPUs used for training')
 
 args = parser.parse_args()
 
@@ -88,19 +89,22 @@ def test_dehighlight(test_loader, network, dehighlight_result_dir):
 
 
 if __name__ == '__main__':
-	network = eval(args.model.replace('-', '_'))()
+	# network = eval(args.model.replace('-', '_'))()
+	# network = eval(args.model.replace('-', '_'))()
+	network = DIACMPN_dehighlight().cuda()
 	DEPTH_NET = DepthNet.DN().cuda()
 	network.cuda()
 	DEPTH_NET.cuda()
 
 	saved_model_dir = os.path.join(args.save_dir, args.exp, args.model+'.pth')
+	saved_detection_dir = os.path.join(args.save_dir, args.exp, args.model_detection+'.pth')
 
 	if os.path.exists(saved_model_dir):
 
 		print('==> Start testing, current model name: ' + args.model)
 
 		dehighlight_state_dict = torch.load(saved_model_dir)
-		detection_state_dict = torch.load('')   #DE weigth path
+		detection_state_dict = torch.load(saved_detection_dir)   #DE weigth path
 		network.load_state_dict(dehighlight_state_dict['dehighlight_net'])
 		DEPTH_NET.load_state_dict(detection_state_dict['detection_net'])
 
