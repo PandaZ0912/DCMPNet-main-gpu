@@ -8,7 +8,7 @@
 ## Installation
 1. Clone the repository.
     ```bash
-    https://github.com/zhoushen1/DCMPNet
+    https://github.com/xxx
     ```
 
 2. Install PyTorch 1.12.0 and torchvision 0.13.0.
@@ -22,10 +22,6 @@
     ```
     
 ## Prepare
-Download the RESIDE datasets from [here.](https://sites.google.com/view/reside-dehighlight-datasets)
-
-You need to put the `` into the file and you can download the `depth` from (Link：https://pan.baidu.com/s/1sNoMlcehMUtSLRuRvsjKKw?pwd=dbcw 
-code：dbcw)
 
 The final file path should be the same as the following (please check it carefully):
 ```
@@ -36,16 +32,18 @@ The final file path should be the same as the following (please check it careful
 │   │   └─ ... (model name)
 │   └─ ... (exp name)
 └─ data
-    ├─ RESIDE-IN
+    ├─ RD
     │   ├─ train
-    │   │   ├─ GT
+    │   │   ├─ input
     │   │   │   └─ ... (image filename)
-    │   │   └─ hazy
+    │   │   │─ mask
+    │   │   │   └─ ... (image filename)
+    │   │   └─ target
     │   │       └─ ... (image filename)
     │   └─ test
-    │   │   ├─ GT
+    │   │   ├─ input
     │   │   │   └─ ... (image filename)
-    │   │   └─ hazy
+    │   │   └─ target
     │   │       └─ ... (image filename)
     └─ ... (dataset name)
 ```
@@ -57,13 +55,13 @@ To customize the training settings for each experiment, navigate to the `configs
 After adjusting the settings, use the following script to initiate the training of the model:
 
 ```sh
-CUDA_VISIBLE_DEVICES=X python train.py --model (model name) --dataset (dataset name) --exp (exp name)
+CUDA_VISIBLE_DEVICES=X python train.py --model (model name) --model_detection (detection_model name) --dataset (dataset name) --exp (exp name)
 ```
 
-For example, we train the DIACMPN-dehighlight-Indoor on the ITS:
+For example, we train the DIACMPN-dehighlight-Indoor on the RD:
 
 ```sh
-CUDA_VISIBLE_DEVICES=0 python train.py --model DIACMPN-dehighlight-Indoor --dataset RESIDE-IN --exp Highlight-Removal
+CUDA_VISIBLE_DEVICES=0 python train.py --model Highlight-Removal --model_detection Highlight-Removal-detection --dataset RD --exp Highlight-Removal
 ```
 
 ## Evaluation
@@ -72,13 +70,13 @@ Run the following script to evaluate the trained model with a single GPU.
 
 
 ```sh
-CUDA_VISIBLE_DEVICES=X python test.py --model (model name) --dataset (dataset name) --exp (exp name)
+CUDA_VISIBLE_DEVICES=X python test.py --model (model name) --model_detection (detection_model name) --dataset (dataset name) --exp (exp name)
 ```
 
 For example, we test the DIACMPN-dehighlight-Indoor on the SOTS indoor set:
 
 ```sh
-CUDA_VISIBLE_DEVICES=0 python test.py --model DIACMPN-dehighlight-Indoor --dataset RESIDE-IN --exp Highlight-Removal
+CUDA_VISIBLE_DEVICES=0 python test.py --model Highlight-Removal --model_detection Highlight-Removal-detection --dataset RD --exp Highlight-Removal
 ```
 
 
